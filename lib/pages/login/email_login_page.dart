@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/dialog/warning_dialog.dart';
 import 'change_password_page.dart';
 
 class EmailLoginPage extends StatefulWidget {
@@ -112,6 +113,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     await Future<void>.delayed(const Duration(seconds: 1));
     if (!mounted) return;
     setState(() => _loading = false);
+
+    // TODO: 替换为真实接口，接口失败时调用 showLoginFailDialog
+    // 示例：模拟登录失败
+    // showLoginFailDialog(context, message: '邮箱或密码错误，请重试');
+    // return;
+
     widget.onSubmit?.call();
   }
 

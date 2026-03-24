@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../components/dialog/warning_dialog.dart';
+
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({
     super.key,
@@ -148,6 +150,17 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     await Future<void>.delayed(const Duration(seconds: 1));
     if (!mounted) return;
     setState(() => _loading = false);
+
+    // TODO: 替换为真实接口，接口失败时调用对应弹框
+    // 注册失败示例：
+    // if (_isRegister) {
+    //   showRegisterFailDialog(context, message: '该邮箱已被注册');
+    //   return;
+    // }
+    // 修改密码失败示例：
+    // showChangePasswordFailDialog(context, message: '验证码错误或已过期');
+    // return;
+
     if (_isRegister) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
