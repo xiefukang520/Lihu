@@ -44,8 +44,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   String? _emailError;
   String? _pwdError;
 
-  bool get _canSubmit =>
-      _emailCtrl.text.isNotEmpty && _pwdCtrl.text.isNotEmpty;
+  bool get _canSubmit => _emailCtrl.text.isNotEmpty && _pwdCtrl.text.isNotEmpty;
 
   @override
   void initState() {
@@ -83,8 +82,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
       _emailError = v.isEmpty
           ? null
           : _emailReg.hasMatch(v)
-              ? null
-              : '请输入正确的邮箱格式';
+          ? null
+          : '请输入正确的邮箱格式';
     });
   }
 
@@ -94,8 +93,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
       _pwdError = v.isEmpty
           ? null
           : v.length < 6
-              ? '密码至少6位'
-              : null;
+          ? '密码至少6位'
+          : null;
     });
   }
 
@@ -104,9 +103,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     _validatePassword();
     if (_emailError != null || _pwdError != null) return;
     if (!_agreed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请先阅读并同意用户协议与隐私条款')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('请先阅读并同意用户协议与隐私条款')));
       return;
     }
     setState(() => _loading = true);
@@ -139,7 +138,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 2, right: 16),
+                    padding: const EdgeInsets.only(top: 16, right: 16),
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
@@ -148,25 +147,28 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('跳过登陆',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xFF05051A),
-                                    fontFamily: 'PingFang SC')),
+                            Text(
+                              '跳过登陆',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF05051A),
+                                fontFamily: 'PingFang SC',
+                              ),
+                            ),
                             SizedBox(width: 4),
-                            Icon(Icons.chevron_right,
-                                size: 14, color: Color(0xFF05051A)),
+                            Icon(
+                              Icons.chevron_right,
+                              size: 14,
+                              color: Color(0xFF05051A),
+                            ),
                           ],
                         ),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(top: 32),
-                      child: _buildBody(context),
-                    ),
+                    child: SingleChildScrollView(child: _buildBody(context)),
                   ),
                   _buildOtherLogin(),
                   const SizedBox(height: 28),
@@ -193,8 +195,11 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                 Positioned(
                   top: 12,
                   right: _hPad,
-                  child: Image.asset(widget.mascotAsset,
-                      width: 228, fit: BoxFit.fitWidth),
+                  child: Image.asset(
+                    widget.mascotAsset,
+                    width: 228,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: _hPad),
@@ -206,13 +211,16 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                         height: 80,
                         child: Align(
                           alignment: Alignment.bottomLeft,
-                          child: Text('邮箱登陆',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF05051A),
-                                  fontFamily: 'PingFang SC',
-                                  height: 1.0)),
+                          child: Text(
+                            '邮箱登陆',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF05051A),
+                              fontFamily: 'PingFang SC',
+                              height: 1.0,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -247,21 +255,29 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _grayText('忘记密码',
-                      onTap: widget.onForgetPassword ??
-                          () => Navigator.of(context).push(
-                                MaterialPageRoute<void>(
-                                    builder: (_) =>
-                                        const ChangePasswordPage()),
-                              )),
-                  _grayText('注册账号',
-                      onTap: widget.onRegister ??
-                          () => Navigator.of(context).push(
-                                MaterialPageRoute<void>(
-                                    builder: (_) => const ChangePasswordPage(
-                                        title: '注册',
-                                        mascotAsset: 'assent/register.png')),
-                              )),
+                  _grayText(
+                    '忘记密码',
+                    onTap:
+                        widget.onForgetPassword ??
+                        () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ChangePasswordPage(),
+                          ),
+                        ),
+                  ),
+                  _grayText(
+                    '注册账号',
+                    onTap:
+                        widget.onRegister ??
+                        () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ChangePasswordPage(
+                              title: '注册',
+                              mascotAsset: 'assent/register.png',
+                            ),
+                          ),
+                        ),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -298,13 +314,17 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           if (_emailError != null) _validateEmail();
         },
         style: const TextStyle(
-            fontSize: 14, color: Color(0xFF05051A), fontFamily: 'PingFang SC'),
+          fontSize: 14,
+          color: Color(0xFF05051A),
+          fontFamily: 'PingFang SC',
+        ),
         decoration: const InputDecoration(
           hintText: '请输入邮箱号',
           hintStyle: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF9292A6),
-              fontFamily: 'PingFang SC'),
+            fontSize: 14,
+            color: Color(0xFF9292A6),
+            fontFamily: 'PingFang SC',
+          ),
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
@@ -336,15 +356,21 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           if (_pwdError != null) _validatePassword();
         },
         style: const TextStyle(
-            fontSize: 14, color: Color(0xFF05051A), fontFamily: 'PingFang SC'),
+          fontSize: 14,
+          color: Color(0xFF05051A),
+          fontFamily: 'PingFang SC',
+        ),
         decoration: InputDecoration(
           hintText: '请输入密码',
           hintStyle: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF9292A6),
-              fontFamily: 'PingFang SC'),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            fontSize: 14,
+            color: Color(0xFF9292A6),
+            fontFamily: 'PingFang SC',
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -364,26 +390,32 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     );
   }
 
-  Widget _label(String text) => Text(text,
-      style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF05051A),
-          fontFamily: 'PingFang SC',
-          height: 1.0));
+  Widget _label(String text) => Text(
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: Color(0xFF05051A),
+      fontFamily: 'PingFang SC',
+      height: 1.0,
+    ),
+  );
 
   Widget _errorText(String msg) =>
       Text(msg, style: const TextStyle(fontSize: 12, color: Color(0xFFFF4D4F)));
 
   Widget _grayText(String text, {VoidCallback? onTap}) => GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Text(text,
-            style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF9292A6),
-                fontFamily: 'PingFang SC')),
-      );
+    onTap: onTap,
+    behavior: HitTestBehavior.opaque,
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontSize: 14,
+        color: Color(0xFF9292A6),
+        fontFamily: 'PingFang SC',
+      ),
+    ),
+  );
 
   Widget _submitButton() {
     final enabled = _canSubmit && !_loading;
@@ -409,14 +441,19 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                   width: 22,
                   height: 22,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white),
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 )
-              : const Text('完成',
+              : const Text(
+                  '完成',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontFamily: 'PingFang SC')),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontFamily: 'PingFang SC',
+                  ),
+                ),
         ),
       ),
     );
@@ -451,11 +488,15 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         RichText(
           text: TextSpan(
             style: const TextStyle(
-                fontSize: 14, fontFamily: 'PingFang SC', height: 1.0),
+              fontSize: 14,
+              fontFamily: 'PingFang SC',
+              height: 1.0,
+            ),
             children: [
               const TextSpan(
-                  text: '我已阅读并同意',
-                  style: TextStyle(color: Color(0xFF9292A6))),
+                text: '我已阅读并同意',
+                style: TextStyle(color: Color(0xFF9292A6)),
+              ),
               TextSpan(
                 text: '用户协议',
                 style: const TextStyle(color: Color(0xFF4D79FF)),
@@ -463,7 +504,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                   ..onTap = widget.onAgreementLinkTap,
               ),
               const TextSpan(
-                  text: '&', style: TextStyle(color: Color(0xFF9292A6))),
+                text: '&',
+                style: TextStyle(color: Color(0xFF9292A6)),
+              ),
               TextSpan(
                 text: '隐私条款',
                 style: const TextStyle(color: Color(0xFF4D79FF)),
@@ -490,43 +533,60 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         Row(
           children: const [
             Expanded(
-                child: Divider(
-                    color: Color(0xFFD6DAE6), thickness: 0.5, indent: 40)),
+              child: Divider(
+                color: Color(0xFFD6DAE6),
+                thickness: 0.5,
+                indent: 40,
+              ),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Text('其他登陆方式',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF9292A6),
-                      fontFamily: 'PingFang SC')),
+              child: Text(
+                '其他登陆方式',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF9292A6),
+                  fontFamily: 'PingFang SC',
+                ),
+              ),
             ),
             Expanded(
-                child: Divider(
-                    color: Color(0xFFD6DAE6),
-                    thickness: 0.5,
-                    endIndent: 40)),
+              child: Divider(
+                color: Color(0xFFD6DAE6),
+                thickness: 0.5,
+                endIndent: 40,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: icons.map((path) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: Image.asset(path,
-                      width: 24, height: 24, fit: BoxFit.contain),
-                ),
-              ),
-            );
-          }).toList(growable: false),
+          children: icons
+              .map((path) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        path,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                );
+              })
+              .toList(growable: false),
         ),
       ],
     );
