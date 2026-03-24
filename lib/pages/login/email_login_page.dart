@@ -182,7 +182,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    const double clipH = 190.0;
+    const double clipH = 212.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,7 +206,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 34),
                       const SizedBox(
                         height: 80,
                         child: Align(
