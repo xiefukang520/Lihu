@@ -164,6 +164,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                   ),
                   Expanded(
                     child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(top: 32),
                       child: _buildBody(context),
                     ),
                   ),
