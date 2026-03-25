@@ -21,6 +21,7 @@ class ChangePasswordPage extends StatefulWidget {
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
   static const Color _enabledButtonColor = Color(0xFF3B53CF);
   static const Color _disabledButtonColor = Color(0xFF8298F9);
+  static const String _numberFontFamily = 'DIN Alternate';
 
   // 水平统一边距，页面里多处复用，避免到处写 magic number。
   static const double _hPad = 24.0;
@@ -113,15 +114,19 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     final err = v.isEmpty
         ? '请输入邮箱号'
         : !_emailReg.hasMatch(v)
-            ? '请输入正确的邮箱格式'
-            : null;
+        ? '请输入正确的邮箱格式'
+        : null;
     setState(() => _emailError = err);
     return err == null;
   }
 
   bool _validateCode() {
     final v = _codeCtrl.text.trim();
-    final err = v.isEmpty ? '请输入验证码' : v.length < 4 ? '验证码格式不正确' : null;
+    final err = v.isEmpty
+        ? '请输入验证码'
+        : v.length < 4
+        ? '验证码格式不正确'
+        : null;
     setState(() => _codeError = err);
     return err == null;
   }
@@ -131,8 +136,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     final err = v.isEmpty
         ? '请输入密码'
         : v.length < 6
-            ? '密码至少6位'
-            : null;
+        ? '密码至少6位'
+        : null;
     setState(() => _pwdError = err);
     return err == null;
   }
@@ -164,9 +169,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     if (!emailOk || !codeOk || !pwdOk) return;
     // 协议未勾选时，直接给出提示并阻止提交。
     if (!_agreed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请先阅读并同意用户协议与隐私条款')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('请先阅读并同意用户协议与隐私条款')));
       return;
     }
     // 模拟网络请求：进入加载态 -> 等待 -> 退出加载态。
@@ -191,6 +196,25 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     }
   }
 
+  void _goToForgotPassword() {
+    if (!_isRegister) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => const ChangePasswordPage()),
+    );
+  }
+
+  void _goToRegister() {
+    if (_isRegister) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const ChangePasswordPage(
+          title: '注册',
+          mascotAsset: 'assent/register.png',
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // 根手势：点击空白收起键盘，避免遮挡输入框。
@@ -213,14 +237,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     child: GestureDetector(
                       onTap: () => Navigator.of(context).pop(),
                       behavior: HitTestBehavior.opaque,
-                      child: const Icon(Icons.arrow_back_ios,
-                          size: 13, color: Color(0xFF05051A)),
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 13,
+                        color: Color(0xFF05051A),
+                      ),
                     ),
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: _buildContent(),
-                    ),
+                    child: SingleChildScrollView(child: _buildContent()),
                   ),
                   _buildOtherLogin(),
                   const SizedBox(height: 28),
@@ -248,8 +273,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 Positioned(
                   top: 10,
                   right: _hPad,
-                  child: Image.asset(widget.mascotAsset,
-                      width: 225, fit: BoxFit.fitWidth),
+                  child: Image.asset(
+                    widget.mascotAsset,
+                    width: 225,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: _hPad),
@@ -261,13 +289,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         height: 80,
                         child: Align(
                           alignment: Alignment.bottomLeft,
-                          child: Text(widget.title,
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF05051A),
-                                  fontFamily: 'PingFang SC',
-                                  height: 1.0)),
+                          child: Text(
+                            widget.title,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF05051A),
+                              fontFamily: 'PingFang SC',
+                              height: 1.0,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -315,26 +346,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 _errorText(_pwdError!),
               ],
               const SizedBox(height: 24),
-              if (!_isRegister) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _grayText('忘记密码',
-                        onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                  builder: (_) => const ChangePasswordPage()),
-                            )),
-                    _grayText('注册账号',
-                        onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                  builder: (_) => const ChangePasswordPage(
-                                      title: '注册',
-                                      mascotAsset: 'assent/register.png')),
-                            )),
-                  ],
-                ),
-                const SizedBox(height: 24),
-              ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _grayText('忘记密码', onTap: _goToForgotPassword),
+                  _grayText('注册账号', onTap: _goToRegister),
+                ],
+              ),
+              const SizedBox(height: 24),
               _submitButton(),
               const SizedBox(height: 27),
               Center(child: _agreementRow()),
@@ -377,15 +396,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         inputFormatters: inputFormatters,
         onChanged: onChanged,
         style: const TextStyle(
-            fontSize: 14, color: Color(0xFF05051A), fontFamily: 'PingFang SC'),
+          fontSize: 14,
+          color: Color(0xFF05051A),
+          fontFamily: 'PingFang SC',
+        ),
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF9292A6),
-              fontFamily: 'PingFang SC'),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            fontSize: 14,
+            color: Color(0xFF9292A6),
+            fontFamily: 'PingFang SC',
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -423,17 +448,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 if (_codeError != null) _validateCode();
               },
               style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF05051A),
-                  fontFamily: 'PingFang SC'),
+                fontSize: 14,
+                color: Color(0xFF05051A),
+                fontFamily: 'PingFang SC',
+              ),
               decoration: const InputDecoration(
                 hintText: '请输入验证码',
                 hintStyle: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF9292A6),
-                    fontFamily: 'PingFang SC'),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  fontSize: 14,
+                  color: Color(0xFF9292A6),
+                  fontFamily: 'PingFang SC',
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -454,14 +483,40 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 alignment: Alignment.center,
-                child: Text(
-                  canSend ? '发送验证码' : '$_countdown秒',
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontFamily: 'PingFang SC'),
-                ),
+                child: canSend
+                    ? const Text(
+                        '发送验证码',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontFamily: 'PingFang SC',
+                        ),
+                      )
+                    : RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '$_countdown',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                fontFamily: _numberFontFamily,
+                              ),
+                            ),
+                            const TextSpan(
+                              text: '秒',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                fontFamily: 'PingFang SC',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
             ),
           ),
@@ -492,26 +547,32 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     );
   }
 
-  Widget _label(String text) => Text(text,
-      style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF05051A),
-          fontFamily: 'PingFang SC',
-          height: 1.0));
+  Widget _label(String text) => Text(
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: Color(0xFF05051A),
+      fontFamily: 'PingFang SC',
+      height: 1.0,
+    ),
+  );
 
   Widget _errorText(String msg) =>
       Text(msg, style: const TextStyle(fontSize: 12, color: Color(0xFFFF4D4F)));
 
   Widget _grayText(String text, {VoidCallback? onTap}) => GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Text(text,
-            style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF9292A6),
-                fontFamily: 'PingFang SC')),
-      );
+    onTap: onTap,
+    behavior: HitTestBehavior.opaque,
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontSize: 14,
+        color: Color(0xFF9292A6),
+        fontFamily: 'PingFang SC',
+      ),
+    ),
+  );
 
   Widget _submitButton() {
     final enabled = _canSubmit && !_loading;
@@ -531,14 +592,19 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   width: 22,
                   height: 22,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white),
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 )
-              : const Text('完成',
+              : const Text(
+                  '完成',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontFamily: 'PingFang SC')),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontFamily: 'PingFang SC',
+                  ),
+                ),
         ),
       ),
     );
@@ -573,18 +639,24 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         RichText(
           text: TextSpan(
             style: const TextStyle(
-                fontSize: 14, fontFamily: 'PingFang SC', height: 1.0),
+              fontSize: 14,
+              fontFamily: 'PingFang SC',
+              height: 1.0,
+            ),
             children: [
               const TextSpan(
-                  text: '我已阅读并同意',
-                  style: TextStyle(color: Color(0xFF9292A6))),
+                text: '我已阅读并同意',
+                style: TextStyle(color: Color(0xFF9292A6)),
+              ),
               TextSpan(
                 text: '用户协议',
                 style: const TextStyle(color: Color(0xFF4D79FF)),
                 recognizer: TapGestureRecognizer()..onTap = () {},
               ),
               const TextSpan(
-                  text: '&', style: TextStyle(color: Color(0xFF9292A6))),
+                text: '&',
+                style: TextStyle(color: Color(0xFF9292A6)),
+              ),
               TextSpan(
                 text: '隐私条款',
                 style: const TextStyle(color: Color(0xFF4D79FF)),
@@ -612,27 +684,24 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             Expanded(
               child: FractionallySizedBox(
                 widthFactor: 0.33,
-                child: Divider(
-                  color: Color(0xFFD6DAE6),
-                  thickness: 0.5,
-                ),
+                child: Divider(color: Color(0xFFD6DAE6), thickness: 0.5),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Text('其他登陆方式',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF9292A6),
-                      fontFamily: 'PingFang SC')),
+              child: Text(
+                '其他登陆方式',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF9292A6),
+                  fontFamily: 'PingFang SC',
+                ),
+              ),
             ),
             Expanded(
               child: FractionallySizedBox(
                 widthFactor: 0.33,
-                child: Divider(
-                  color: Color(0xFFD6DAE6),
-                  thickness: 0.5,
-                ),
+                child: Divider(color: Color(0xFFD6DAE6), thickness: 0.5),
               ),
             ),
           ],
@@ -640,23 +709,31 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: icons.map((path) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: Image.asset(path,
-                      width: 24, height: 24, fit: BoxFit.contain),
-                ),
-              ),
-            );
-          }).toList(growable: false),
+          children: icons
+              .map((path) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        path,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                );
+              })
+              .toList(growable: false),
         ),
       ],
     );

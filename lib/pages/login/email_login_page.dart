@@ -278,19 +278,17 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                     '忘记密码',
                     onTap:
                         widget.onForgetPassword ??
-                        () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const ChangePasswordPage(),
-                          ),
-                        ),
+                        () => Navigator.of(
+                          context,
+                        ).push(_buildSlideRoute(const ChangePasswordPage())),
                   ),
                   _grayText(
                     '注册账号',
                     onTap:
                         widget.onRegister ??
                         () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const ChangePasswordPage(
+                          _buildSlideRoute(
+                            const ChangePasswordPage(
                               title: '注册',
                               mascotAsset: 'assent/register.png',
                             ),
@@ -423,6 +421,27 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   Widget _errorText(String msg) =>
       Text(msg, style: const TextStyle(fontSize: 12, color: Color(0xFFFF4D4F)));
 
+  Route<void> _buildSlideRoute(Widget page) {
+    return PageRouteBuilder<void>(
+      transitionDuration: const Duration(milliseconds: 350),
+      reverseTransitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeInOut,
+        );
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1.0, 0.0),
+            end: Offset.zero,
+          ).animate(curved),
+          child: FadeTransition(opacity: curved, child: child),
+        );
+      },
+    );
+  }
+
   Widget _grayText(String text, {VoidCallback? onTap}) => GestureDetector(
     onTap: onTap,
     behavior: HitTestBehavior.opaque,
@@ -548,10 +567,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
             Expanded(
               child: FractionallySizedBox(
                 widthFactor: 0.33,
-                child: Divider(
-                  color: Color(0xFFD6DAE6),
-                  thickness: 0.5,
-                ),
+                child: Divider(color: Color(0xFFD6DAE6), thickness: 0.5),
               ),
             ),
             Padding(
@@ -568,10 +584,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
             Expanded(
               child: FractionallySizedBox(
                 widthFactor: 0.33,
-                child: Divider(
-                  color: Color(0xFFD6DAE6),
-                  thickness: 0.5,
-                ),
+                child: Divider(color: Color(0xFFD6DAE6), thickness: 0.5),
               ),
             ),
           ],
