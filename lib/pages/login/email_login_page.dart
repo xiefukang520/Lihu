@@ -169,16 +169,20 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                               '跳过登陆',
                               style: TextStyle(
                                 fontSize: 14,
-                                fontWeight: FontWeight.w400,
                                 color: Color(0xFF05051A),
                                 fontFamily: 'PingFang SC',
+                                height: 1.0,
                               ),
                             ),
                             SizedBox(width: 4),
-                            Icon(
-                              Icons.chevron_right,
-                              size: 14,
-                              color: Color(0xFF05051A),
+                            Text(
+                              '>',
+                              style: TextStyle(
+                                fontSize: 21,
+                                color: Color(0xFF05051A),
+                                fontFamily: 'PingFang SC',
+                                height: 1.0,
+                              ),
                             ),
                           ],
                         ),

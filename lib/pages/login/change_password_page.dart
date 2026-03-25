@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'email_login_page.dart';
+
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({
     super.key,
@@ -21,6 +23,7 @@ class ChangePasswordPage extends StatefulWidget {
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
   static const Color _enabledButtonColor = Color(0xFF3B53CF);
   static const Color _disabledButtonColor = Color(0xFF8298F9);
+  static const Color _sendCodeButtonColor = Color(0xFF4D79FF);
   static const String _numberFontFamily = 'DIN Alternate';
 
   // 水平统一边距，页面里多处复用，避免到处写 magic number。
@@ -215,6 +218,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     );
   }
 
+  void _goToEmailLogin() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const EmailLoginPage()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // 根手势：点击空白收起键盘，避免遮挡输入框。
@@ -235,11 +245,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 16, top: 14),
                     child: GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
+                      onTap: _goToEmailLogin,
                       behavior: HitTestBehavior.opaque,
                       child: const Icon(
-                        Icons.arrow_back_ios,
-                        size: 13,
+                        Icons.arrow_back_ios_new,
+                        size: 20,
                         color: Color(0xFF05051A),
                       ),
                     ),
@@ -479,7 +489,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 width: 84,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: canSend ? _enabledButtonColor : _disabledButtonColor,
+                  color: canSend ? _sendCodeButtonColor : _disabledButtonColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
                 alignment: Alignment.center,
