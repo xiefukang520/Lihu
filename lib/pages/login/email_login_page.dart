@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../home_page.dart';
 import 'change_password_page.dart';
 
 class EmailLoginPage extends StatefulWidget {
@@ -138,6 +139,16 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     widget.onSubmit?.call();
   }
 
+  void _handleSkipLogin() {
+    if (widget.onSkipLogin != null) {
+      widget.onSkipLogin!.call();
+      return;
+    }
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => const HomePage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // 点击空白区域收起键盘。
@@ -160,7 +171,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                        onTap: widget.onSkipLogin,
+                        onTap: _handleSkipLogin,
                         behavior: HitTestBehavior.opaque,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
