@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/dialog/warning_dialog.dart';
 import 'change_password_page.dart';
 
 class EmailLoginPage extends StatefulWidget {
@@ -29,28 +28,42 @@ class EmailLoginPage extends StatefulWidget {
 }
 
 class _EmailLoginPageState extends State<EmailLoginPage> {
+  static const Color _enabledButtonColor = Color(0xFF3B53CF);
+  static const Color _disabledButtonColor = Color(0xFF8298F9);
+
+  // 页面统一水平边距。
   static const double _hPad = 24.0;
+  // 邮箱格式校验正则。
   static final _emailReg = RegExp(r'^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$');
 
+  // 是否勾选协议。
   bool _agreed = false;
+  // 密码是否隐藏显示。
   bool _obscurePassword = true;
+  // 提交时的 loading 状态。
   bool _loading = false;
 
+  // 输入控制器：负责读写输入框内容。
   final _emailCtrl = TextEditingController();
   final _pwdCtrl = TextEditingController();
+  // 焦点节点：用于监听失焦时触发校验。
   final _emailFocus = FocusNode();
   final _pwdFocus = FocusNode();
 
+  // 错误提示文本；为 null 时表示当前输入合法。
   String? _emailError;
   String? _pwdError;
 
+  // 按钮是否可点（只做非空判断，格式校验在提交时做）。
   bool get _canSubmit => _emailCtrl.text.isNotEmpty && _pwdCtrl.text.isNotEmpty;
 
   @override
   void initState() {
     super.initState();
+    // 输入变化后刷新 UI（比如按钮可用态、错误提示展示）。
     _emailCtrl.addListener(() => setState(() {}));
     _pwdCtrl.addListener(() => setState(() {}));
+    // 输入框失焦后再校验，避免用户输入过程中频繁报错打断体验。
     _emailFocus.addListener(() {
       if (!_emailFocus.hasFocus) {
         _validateEmail();
@@ -69,6 +82,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
   @override
   void dispose() {
+    // 释放控制器和焦点，避免内存泄漏。
     _emailCtrl.dispose();
     _pwdCtrl.dispose();
     _emailFocus.dispose();
@@ -99,15 +113,18 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   }
 
   Future<void> _handleSubmit() async {
+    // 先做前端校验，不通过则不请求后端。
     _validateEmail();
     _validatePassword();
     if (_emailError != null || _pwdError != null) return;
+    // 协议未同意则阻止提交。
     if (!_agreed) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('请先阅读并同意用户协议与隐私条款')));
       return;
     }
+    // 模拟异步登录流程。
     setState(() => _loading = true);
     await Future<void>.delayed(const Duration(seconds: 1));
     if (!mounted) return;
@@ -123,6 +140,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 点击空白区域收起键盘。
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -182,6 +200,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   }
 
   Widget _buildBody(BuildContext context) {
+    // 页面主体：上方标题+插画，下方表单与操作区。
     const double clipH = 212.0;
 
     return Column(
@@ -427,13 +446,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: enabled
-                ? [const Color(0xFF96ADFF), const Color(0xFF6E8DF5)]
-                : [const Color(0xFFCDD5F5), const Color(0xFFCDD5F5)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
+          color: enabled ? _enabledButtonColor : _disabledButtonColor,
         ),
         child: Center(
           child: _loading
@@ -533,10 +546,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         Row(
           children: const [
             Expanded(
-              child: Divider(
-                color: Color(0xFFD6DAE6),
-                thickness: 0.5,
-                indent: 40,
+              child: FractionallySizedBox(
+                widthFactor: 0.33,
+                child: Divider(
+                  color: Color(0xFFD6DAE6),
+                  thickness: 0.5,
+                ),
               ),
             ),
             Padding(
@@ -551,10 +566,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               ),
             ),
             Expanded(
-              child: Divider(
-                color: Color(0xFFD6DAE6),
-                thickness: 0.5,
-                endIndent: 40,
+              child: FractionallySizedBox(
+                widthFactor: 0.33,
+                child: Divider(
+                  color: Color(0xFFD6DAE6),
+                  thickness: 0.5,
+                ),
               ),
             ),
           ],
