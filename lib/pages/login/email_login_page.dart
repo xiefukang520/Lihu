@@ -174,7 +174,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                                 height: 1.0,
                               ),
                             ),
-                            SizedBox(width: 4),
+                            SizedBox(width: 2),
                             Image.asset(
                               'assent/goback.png',
                               width: 21,
