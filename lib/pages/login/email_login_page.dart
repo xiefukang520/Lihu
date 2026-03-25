@@ -162,7 +162,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                       child: GestureDetector(
                         onTap: widget.onSkipLogin,
                         behavior: HitTestBehavior.opaque,
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -175,14 +175,11 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                               ),
                             ),
                             SizedBox(width: 4),
-                            Text(
-                              '>',
-                              style: TextStyle(
-                                fontSize: 21,
-                                color: Color(0xFF05051A),
-                                fontFamily: 'PingFang SC',
-                                height: 1.0,
-                              ),
+                            Image.asset(
+                              'assent/goback.png',
+                              width: 21,
+                              height: 21,
+                              fit: BoxFit.contain,
                             ),
                           ],
                         ),
